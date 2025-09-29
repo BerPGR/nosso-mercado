@@ -1,10 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf">
-    <q-header elevated class="bg-primary text-white" height-hint="98">
-      <q-tabs align="left">
-        <q-route-tab to="/" label="Page One" />
-        <q-route-tab to="/about" label="Page Two" />
-      </q-tabs>
-    </q-header>
-  </q-layout>
+  <q-page class="q-pa-md text-dark">
+    <h1 class="text-h1 text-purple-1">TOPZWASRASF</h1>
+  </q-page>
 </template>
