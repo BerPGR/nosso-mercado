@@ -23,7 +23,7 @@
       <div
         v-for="(card, i) in lists"
         :key="i"
-        class="col-12 col-sm-8"
+        class="col-12 col-sm-6 col-md-4"
       >
         <q-card flat bordered class="">
           <q-card-section>
