@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import CreateList from '../views/CreateList.vue'
+import CheckList from '@/views/CheckList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,6 +19,17 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: CreateList
     },
+    {
+      path: '/create-list',
+      name: 'create-list',
+      component: CreateList
+    },
+      {
+    path: '/lists/:id',
+    name: 'list.view',
+    component: CheckList,
+    props: true, // <- transforma route.params em props do componente
+  },
   ],
 })
 

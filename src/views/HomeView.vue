@@ -13,7 +13,7 @@
           label="Adicionar lista"
           unelevated
           class="full-width q-px-md q-px-lg-md"
-          @click="addList"
+          to="/create-list"
         />
       </div>
     </div>
@@ -28,31 +28,24 @@
         <q-card flat bordered class="">
           <q-card-section>
             <div class="text-h6">{{ card.title }}</div>
-            <div class="text-caption text-grey-7">{{ card.subtitle }}</div>
           </q-card-section>
 
           <q-separator />
-
-          <q-card-section class="q-pt-md">
-            <div class="text-body2">
-              {{ card.description }}
-            </div>
-          </q-card-section>
 
           <!-- empurra as ações para o fim do card -->
           <div class="q-space"></div>
 
           <q-card-actions align="right" class="q-pa-md">
-            <q-btn flat icon="edit" label="Editar" />
-            <q-btn flat color="negative" icon="delete" label="Remover" @click="removeList(i)" />
+            <q-btn flat icon="check" color="primary" label="Ver Lista" :to="{name:'list.view', params: {id: card.id}}" />
+            <q-btn flat color="negative" icon="delete" label="Deletar" @click="removeList(i)" />
           </q-card-actions>
         </q-card>
       </div>
 
       <!-- Estado vazio elegante -->
-      <div v-if="!lists.length" class="col-12">
+      <div v-if="!lists.length" class="col-12 row items-center justify-center">
         <q-banner inline-actions class="bg-grey-2">
-          Você ainda não tem listas. Clique em <strong>Adicionar lista</strong> para criar a primeira.
+          Nenhuma lista registrada. Clique em <strong>Adicionar lista</strong> para criar a primeira.
         </q-banner>
       </div>
     </div>
@@ -60,25 +53,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useListComposable } from '@/composables/useListComposable'
 
-type ListCard = { title: string; subtitle?: string; description?: string }
-const lists = ref<ListCard[]>([
-  { title: 'Nova lista #1', subtitle: 'Rascunho', description: 'Clique em editar para personalizar.' },
-  { title: 'Nova lista #2', subtitle: 'Rascunho', description: 'Clique em editar para personalizar.' },
-  { title: 'Nova lista #3', subtitle: 'Rascunho', description: 'Clique em editar para personalizar.' },
-  { title: 'Nova lista #4', subtitle: 'Rascunho', description: 'Clique em editar para personalizar.' },
-])
+const { getLists, deleteList } = useListComposable()
 
-function addList() {
-  lists.value.unshift({
-    title: `Nova lista #${lists.value.length + 1}`,
-    subtitle: 'Rascunho',
-    description: 'Clique em editar para personalizar.'
+type ListCard = { id: string; title: string }
+
+const lists = ref<ListCard[]>([])
+
+onMounted(async () => {
+  const data = await getLists()
+  lists.value = (data || []).map((d) => {
+    const item = d as unknown as ListCard
+    return { id: item.id, title: item.title || 'Lista' }
   })
-}
+})
 
-function removeList(i: number) {
+async function removeList(i: number) {
+  const id = lists.value[i]?.id
+  if (!id) return
+  await deleteList(id)
   lists.value.splice(i, 1)
 }
 </script>

@@ -3,7 +3,6 @@ import { db } from "@/firebase";
 import { ref } from "vue";
 
 interface CartItem {
-  id: number;
   name: string;
   type: string;
   quantity: number;
@@ -14,6 +13,10 @@ export function useListComposable() {
 
   function addToCart(item: CartItem) {
     cart.value.push(item);
+  }
+
+  function getListItems() {
+    return cart.value
   }
 
   async function addList(title: string) {
@@ -43,5 +46,5 @@ export function useListComposable() {
   async function deleteList(id: string) {
     await deleteDoc(doc(db, "lists", id));
   }
-  return { addToCart, addList, getLists, deleteList }
+  return { addToCart, addList, getLists, deleteList, getListItems }
 }
