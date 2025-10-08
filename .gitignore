@@ -28,6 +28,8 @@ coverage
 *.sw?
 .env
 
+src/firebase.ts
+
 *.tsbuildinfo
 auto-imports.d.ts
 components.d.ts

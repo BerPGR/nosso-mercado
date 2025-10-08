@@ -7,7 +7,13 @@ import ui from '@nuxt/ui/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueDevTools(), ui()],
+  plugins: [
+    vue(),
+    vueDevTools(),
+    ui({
+      colorMode: false,
+    }),
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
