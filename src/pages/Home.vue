@@ -1,12 +1,14 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <UContainer>
-    <div class="flex items-center justify-between">
-      <UPageHeader class="text-4xl font-bold">Suas Listas</UPageHeader>
-      <UButton to="/list" label="Adicionar Lista" icon="i-lucide-plus" class="text-lg font-semibold cursor-pointer" />
+    <div class="md:flex items-center justify-between sm:flex-col md:flex-row">
+      <h1 class="text-4xl font-bold my-10">Suas Listas</h1>
+      <UButton to="/list" icon="i-lucide-plus"
+        class="inline-flex items-center w-full md:w-max text-lg font-semibold cursor-pointer text-center">
+        Adicionar Lista</UButton>
     </div>
 
-    <div class="grid md:grid-cols-3 sm:grid-cols-1 mt-10">
+    <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-10 mt-10">
       <UCard v-for="lista in listas" :key="lista.title" class="bg-green-100 shadow-2xl">
         <template #header>
           <h1 class="text-xl font-semibold">{{ lista.title }}</h1>
@@ -14,15 +16,15 @@
 
         <div>
           <h2 class="text-4xl">{{ lista.cart.length }} itens</h2>
-          <p>Gasto esperado de <span class="text-2xl text-red-400 font-semibold">R${{ lista.expected.toFixed(2)
-          }}</span>
+          <p>Gasto esperado de <span class="text-2xl text-red-400 font-semibold">{{ formattedValue(lista.expected)
+              }}</span>
           </p>
         </div>
 
         <template #footer>
           <div class="flex items-center justify-between">
             Criado em {{ lista.createdAt }}
-            <UButton label="Acessar lista" @click="goToList(lista)" class="cursor-pointer" />
+            <UButton label="Acessar lista" size="md" @click="goToList(lista)" class="cursor-pointer text-lg" />
           </div>
         </template>
       </UCard>
@@ -54,7 +56,7 @@ onMounted(async () => {
       expected: data.expected ?? 0,
       status: data.status ?? false,
       total: 0,
-      createdAt: data.createdAt ?? new Date()
+      createdAt: data.createdAt ?? ""
     }
   })
 })
@@ -62,5 +64,14 @@ onMounted(async () => {
 function goToList(lista: Lista) {
   listsStore.setSelected(lista)
   router.push('/check-list')
+}
+
+const formatter = Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL'
+})
+
+function formattedValue(value: number) {
+  return formatter.format(value)
 }
 </script>

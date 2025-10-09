@@ -24,7 +24,7 @@ const items = computed<NavigationMenuItem[]>(() => [{
   label: 'Home',
   to: "/",
   icon: 'i-lucide-home',
-  active: route.path.match(/^\/$/)
+  active: route.path == "/"
 },
 {
   label: 'Criar Lista',
@@ -39,8 +39,4 @@ const items = computed<NavigationMenuItem[]>(() => [{
   active: route.path.startsWith("/dashboard")
 },
 ])
-
-const windowSize = computed(() => {
-  return document.body.clientWidth
-})
 </script>
