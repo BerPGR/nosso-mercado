@@ -21,7 +21,7 @@
                 <p class="text-sm text-gray-500">Qtd: {{ item.quantity }}</p>
               </div>
             </div>
-            <UBadge v-if="item.status" color="green" variant="subtle">ok</UBadge>
+            <UBadge v-if="item.status" color="success" variant="subtle">ok</UBadge>
           </li>
         </ul>
       </UCard>

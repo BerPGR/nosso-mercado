@@ -59,6 +59,7 @@
 <script setup lang="ts">
 import useListComposable from '@/composables/useListComposable'
 import type { FormSubmitEvent } from '@nuxt/ui'
+import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { reactive } from 'vue'
 import * as z from 'zod'
 
