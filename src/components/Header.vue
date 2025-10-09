@@ -5,20 +5,22 @@
       <h1 class="text-2xl font-bold">Nosso Mercado</h1>
     </template>
 
-    <template #right>
-      <UButton v-for="item in items" :key="item.label" class="px-4 py-2 mx-2" :to="item.to" :label="item.label"
-        :color="item.active ? 'success' : 'neutral'" :variant="item.active ? 'solid' : 'outline'" />
+    <UNavigationMenu class="gap-4" :items="items" />
+
+    <template #body>
+      <UNavigationMenu :items="items" orientation="vertical" class="mx-2.5" />
     </template>
   </UHeader>
 </template>
 
 <script setup lang="ts">
+import type { NavigationMenuItem } from '@nuxt/ui';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute()
 
-const items = computed(() => [{
+const items = computed<NavigationMenuItem[]>(() => [{
   label: 'Home',
   to: "/",
   icon: 'i-lucide-home',
@@ -27,7 +29,7 @@ const items = computed(() => [{
 {
   label: 'Criar Lista',
   to: "/list",
-  icon: 'i-lucide-home',
+  icon: 'i-lucide-list',
   active: route.path.startsWith("/list")
 },
 {
@@ -37,4 +39,8 @@ const items = computed(() => [{
   active: route.path.startsWith("/dashboard")
 },
 ])
+
+const windowSize = computed(() => {
+  return document.body.clientWidth
+})
 </script>

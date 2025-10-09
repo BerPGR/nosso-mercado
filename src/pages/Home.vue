@@ -3,10 +3,10 @@
   <UContainer>
     <div class="flex items-center justify-between">
       <UPageHeader class="text-4xl font-bold">Suas Listas</UPageHeader>
-      <UButton label="Adicionar Lista" icon="i-lucide-plus" class="text-lg font-semibold cursor-pointer" />
+      <UButton to="/list" label="Adicionar Lista" icon="i-lucide-plus" class="text-lg font-semibold cursor-pointer" />
     </div>
 
-    <div class="grid grid-cols-3 mt-10">
+    <div class="grid md:grid-cols-3 sm:grid-cols-1 mt-10">
       <UCard v-for="lista in listas" :key="lista.title" class="bg-green-100 shadow-2xl">
         <template #header>
           <h1 class="text-xl font-semibold">{{ lista.title }}</h1>
@@ -15,14 +15,14 @@
         <div>
           <h2 class="text-4xl">{{ lista.cart.length }} itens</h2>
           <p>Gasto esperado de <span class="text-2xl text-red-400 font-semibold">R${{ lista.expected.toFixed(2)
-              }}</span>
+          }}</span>
           </p>
         </div>
 
         <template #footer>
           <div class="flex items-center justify-between">
             Criado em {{ lista.createdAt }}
-            <UButton label="Acessar lista" @click="goToList(lista)" />
+            <UButton label="Acessar lista" @click="goToList(lista)" class="cursor-pointer" />
           </div>
         </template>
       </UCard>

@@ -43,6 +43,7 @@ const CATEGORIES = [
   'Alimento',
   'Bebida',
   'Doce',
+  'Frios',
   'Laticinio',
   'Limpeza',
   'Higiene Pessoal',
