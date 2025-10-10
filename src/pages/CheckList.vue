@@ -1,8 +1,12 @@
 <template>
   <UContainer v-if="lista">
-    <h1 class="text-5xl font-bold mb-6">{{ lista.title }}</h1>
+    <div class="flex flex-col md:flex-row items-center justify-between">
+      <h1 class="text-5xl font-bold mb-6">{{ lista.title }}</h1>
+      <UButton color="success" size="lg" label="Marcar como feito" icon="i-lucide-check"
+        class="text-lg md:mb-6 cursor-pointer" />
+    </div>
 
-    <div class="grid gap-4">
+    <div class="grid gap-4 mt-4">
       <UCard v-for="cat in visibleCategories" :key="cat">
         <template #header>
           <div class="flex items-center justify-between">
@@ -15,10 +19,10 @@
           <li v-for="item in grouped[cat]" :key="`${item.name}-${item.type}`"
             class="flex items-center justify-between rounded-lg p-3 bg-gray-50">
             <div class="flex items-center gap-3">
-              <UCheckbox v-model="item.status" />
+              <!--<UCheckbox v-model="item.status" />-->
               <div>
                 <p class="font-medium leading-tight">{{ item.name }}</p>
-                <p class="text-sm text-gray-500">Qtd: {{ item.quantity }}</p>
+                <p class="text-sm text-gray-500">Quantidade: {{ item.quantity }}</p>
               </div>
             </div>
             <UBadge v-if="item.status" color="success" variant="subtle">ok</UBadge>

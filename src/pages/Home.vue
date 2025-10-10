@@ -8,7 +8,7 @@
         Adicionar Lista</UButton>
     </div>
 
-    <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-10 mt-10">
+    <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-10 mt-10" v-if="listas.length > 0">
       <UCard v-for="lista in listas" :key="lista.title" class="bg-green-100 shadow-2xl">
         <template #header>
           <h1 class="text-xl font-semibold">{{ lista.title }}</h1>
@@ -17,7 +17,7 @@
         <div>
           <h2 class="text-4xl">{{ lista.cart.length }} itens</h2>
           <p>Gasto esperado de <span class="text-2xl text-red-400 font-semibold">{{ formattedValue(lista.expected)
-              }}</span>
+          }}</span>
           </p>
         </div>
 
@@ -29,36 +29,28 @@
         </template>
       </UCard>
     </div>
+
+    <UPageCard spotlight title="Ops!" description="Parece que voce ainda nao possui listas" v-else
+      class="w-1/3 mx-auto">
+      <img src="@/assets/carrinho.png" />
+    </UPageCard>
   </UContainer>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { db } from '@/firebase';
-import { collection, getDocs } from 'firebase/firestore';
 import type { Lista } from '@/types/types';
 import { useListsStore } from '@/stores/lists';
 import { useRouter } from 'vue-router';
+import useListComposable from '@/composables/useListComposable'
 
 const router = useRouter()
 const listsStore = useListsStore()
 const listas = ref<Lista[] | []>([])
+const { getOpenListsFromFirebase } = useListComposable()
 
 onMounted(async () => {
-  const allLists = await getDocs(collection(db, 'lists'))
-
-  listas.value = allLists.docs.map((doc) => {
-    const data = doc.data()
-    return {
-      id: doc.id,
-      title: data.title,
-      cart: data.cart,
-      expected: data.expected ?? 0,
-      status: data.status ?? false,
-      total: 0,
-      createdAt: data.createdAt ?? ""
-    }
-  })
+  listas.value = await getOpenListsFromFirebase()
 })
 
 function goToList(lista: Lista) {

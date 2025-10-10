@@ -1,5 +1,6 @@
 import { db } from '@/firebase'
-import { addDoc, collection } from 'firebase/firestore'
+import type { Lista } from '@/types/types'
+import { addDoc, collection, where, query, getDocs } from 'firebase/firestore'
 
 interface ListaFirebase {
   title: string
@@ -10,9 +11,10 @@ interface ListaFirebase {
 export default function useListComposable() {
   const actualDate = new Date()
   const dataToDB = `${actualDate.getFullYear()}-${actualDate.getMonth().toString().padStart(2, '0')}-${actualDate.getDate().toString().padStart(2, '0')}`
+
   async function saveListToFirebase(list: ListaFirebase) {
     const listsRef = collection(db, 'lists')
-    const lista = await addDoc(listsRef, { ...list, createdAt: dataToDB })
+    const lista = await addDoc(listsRef, { ...list, total: 0, status: false, createdAt: dataToDB })
     if (lista) {
       return true
     }
@@ -20,5 +22,22 @@ export default function useListComposable() {
     return false
   }
 
-  return { saveListToFirebase }
+  async function getOpenListsFromFirebase(): Promise<Lista[]> {
+    const q = await query(collection(db, 'lists'), where('status', '==', false))
+    const listsDocs = await getDocs(q)
+    return listsDocs.docs.map((doc) => {
+      const data = doc.data()
+      return {
+        id: doc.id,
+        title: data.title,
+        cart: data.cart,
+        expected: data.expected ?? 0,
+        status: data.status ?? false,
+        total: 0,
+        createdAt: data.createdAt ?? '',
+      }
+    })
+  }
+
+  return { saveListToFirebase, getOpenListsFromFirebase }
 }
