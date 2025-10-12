@@ -111,7 +111,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
   const saved = await saveListToFirebase(event.data)
   if (saved) {
-    toast.add({ title: 'Deu certo!', description: "Deu pra mandar essa bomba", color: 'success' })
+    toast.add({ title: 'Feito!', description: "Sua lista foi criada com sucesso", color: 'success', icon: 'i-lucide-check' })
   }
 }
 

@@ -1,9 +1,13 @@
 <template>
   <UContainer v-if="lista">
-    <div class="flex flex-col md:flex-row items-center justify-between">
+    <div class="flex flex-col items-center justify-between">
       <h1 class="text-5xl font-bold mb-6">{{ lista.title }}</h1>
-      <UButton color="success" size="lg" label="Marcar como feito" icon="i-lucide-check"
-        class="text-lg md:mb-6 cursor-pointer" />
+      <UFormField label="Valor gasto" class="text-md">
+        <UInput v-model="total" size="xl" placeholder="Digite o valor total gasto" class="w-48 text-lg font-normal" />
+      </UFormField>
+      <UButton color="success" size="lg" label="Marcar como feito" icon="i-lucide-check" @click="checkList"
+        class="text-lg md:mb-6 mt-4 cursor-pointer" />
+
     </div>
 
     <div class="grid gap-4 mt-4">
@@ -39,9 +43,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { Cart } from '@/types/types'
 import { useListsStore } from '@/stores/lists'
+import useListComposable from '@/composables/useListComposable'
+import { useRouter } from 'vue-router'
+import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 
 const CATEGORIES = [
   'Alimento',
@@ -56,7 +63,11 @@ const CATEGORIES = [
   'Outros'
 ]
 
+const total = ref<number | null>(null)
 const store = useListsStore()
+const toast = useToast()
+const { checkListAsDone } = useListComposable()
+const router = useRouter()
 const lista = computed(() => store.selected)
 
 // Agrupamento por tipo
@@ -77,4 +88,14 @@ const grouped = computed<Record<string, Cart[]>>(() => {
 const visibleCategories = computed(() =>
   CATEGORIES.filter(cat => grouped.value[cat]?.length)
 )
+
+const checkList = async () => {
+  if (!lista.value?.id || total.value === null) return
+  await checkListAsDone(lista.value.id, total.value)
+  toast.add({ title: 'Feito!', description: "Sua lista foi marcada como feita. Redirecionando...", color: 'success', icon: 'i-lucide-check' })
+  setTimeout(() => {
+    store.clearSelected()
+    router.replace('/')
+  }, 3000)
+}
 </script>

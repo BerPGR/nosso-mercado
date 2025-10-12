@@ -1,6 +1,6 @@
 import { db } from '@/firebase'
 import type { Lista } from '@/types/types'
-import { addDoc, collection, where, query, getDocs } from 'firebase/firestore'
+import { addDoc, collection, where, query, getDocs, updateDoc, doc } from 'firebase/firestore'
 
 interface ListaFirebase {
   title: string
@@ -39,5 +39,10 @@ export default function useListComposable() {
     })
   }
 
-  return { saveListToFirebase, getOpenListsFromFirebase }
+  async function checkListAsDone(id: string, value: number) {
+    const listRef = doc(db, 'lists', id)
+    await updateDoc(listRef, { status: true, total: value })
+  }
+
+  return { saveListToFirebase, getOpenListsFromFirebase, checkListAsDone }
 }

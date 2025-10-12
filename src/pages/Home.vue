@@ -15,15 +15,15 @@
         </template>
 
         <div>
-          <h2 class="text-4xl">{{ lista.cart.length }} itens</h2>
+          <h2 class="text-xl md:text-4xl">{{ lista.cart.length }} itens</h2>
           <p>Gasto esperado de <span class="text-2xl text-red-400 font-semibold">{{ formattedValue(lista.expected)
-          }}</span>
+              }}</span>
           </p>
         </div>
 
         <template #footer>
           <div class="flex items-center justify-between">
-            Criado em {{ lista.createdAt }}
+            <p class="text-xs md:text-lg">Criado em {{ createdAtFormatted(lista.createdAt) }}</p>
             <UButton label="Acessar lista" size="md" @click="goToList(lista)" class="cursor-pointer text-lg" />
           </div>
         </template>
@@ -31,7 +31,7 @@
     </div>
 
     <UPageCard spotlight title="Ops!" description="Parece que voce ainda nao possui listas" v-else
-      class="w-1/3 mx-auto">
+      class="md:w-1/3 mx-auto mt-10">
       <img src="@/assets/carrinho.png" />
     </UPageCard>
   </UContainer>
@@ -56,6 +56,16 @@ onMounted(async () => {
 function goToList(lista: Lista) {
   listsStore.setSelected(lista)
   router.push('/check-list')
+}
+
+const dateFormatter = Intl.DateTimeFormat('pt-BR', {
+  day: '2-digit',
+  month: '2-digit',
+  year: '2-digit'
+})
+
+function createdAtFormatted(date: Date | string) {
+  return dateFormatter.format(new Date(date))
 }
 
 const formatter = Intl.NumberFormat('pt-BR', {
