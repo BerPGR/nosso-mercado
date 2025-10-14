@@ -33,7 +33,24 @@ export default function useListComposable() {
         cart: data.cart,
         expected: data.expected ?? 0,
         status: data.status ?? false,
-        total: 0,
+        total: data.total,
+        createdAt: data.createdAt ?? '',
+      }
+    })
+  }
+
+  async function getClosedListsFromFirebase(): Promise<Lista[]> {
+    const q = await query(collection(db, 'lists'), where('status', '==', true))
+    const listsDocs = await getDocs(q)
+    return listsDocs.docs.map((doc) => {
+      const data = doc.data()
+      return {
+        id: doc.id,
+        title: data.title,
+        cart: data.cart,
+        expected: data.expected ?? 0,
+        status: data.status ?? false,
+        total: data.total,
         createdAt: data.createdAt ?? '',
       }
     })
@@ -44,5 +61,10 @@ export default function useListComposable() {
     await updateDoc(listRef, { status: true, total: value })
   }
 
-  return { saveListToFirebase, getOpenListsFromFirebase, checkListAsDone }
+  return {
+    saveListToFirebase,
+    getOpenListsFromFirebase,
+    getClosedListsFromFirebase,
+    checkListAsDone,
+  }
 }

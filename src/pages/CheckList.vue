@@ -58,6 +58,7 @@ const CATEGORIES = [
   'Laticinio',
   'Limpeza',
   'Higiene Pessoal',
+  'Hortifruti',
   'Mercearia',
   'Padaria',
   'Outros'
