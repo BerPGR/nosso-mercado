@@ -7,7 +7,7 @@
       </UFormField>
 
       <UFormField class="text-2xl" label="Valor">
-        <UInput placeholder="Digite o valor esperado" v-model.lazy="state.expected" size="xl" type="number" />
+        <UInput placeholder="Digite o valor esperado" v-model.lazy="state.expected" size="xl" />
       </UFormField>
 
       <USeparator />
@@ -108,8 +108,6 @@ const cartItem = reactive({
 })
 
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
-  console.log(event);
-
   const saved = await saveListToFirebase(event.data)
   if (saved) {
     toast.add({ title: 'Feito!', description: "Sua lista foi criada com sucesso! Redirecionando...", color: 'success', icon: 'i-lucide-check' })

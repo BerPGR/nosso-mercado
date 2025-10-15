@@ -3,7 +3,8 @@
     <div class="flex flex-col items-center justify-between">
       <h1 class="text-5xl font-bold mb-6">{{ lista.title }}</h1>
       <UFormField label="Valor gasto" class="text-md">
-        <UInput v-model="total" size="xl" placeholder="Digite o valor total gasto" class="w-48 text-lg font-normal" />
+        <UInput v-model="total" size="xl" placeholder="Digite o valor total gasto" class="w-48 text-lg font-normal"
+          type="number" />
       </UFormField>
       <UButton color="success" size="lg" label="Marcar como feito" icon="i-lucide-check" @click="checkList"
         class="text-lg md:mb-6 mt-4 cursor-pointer" />

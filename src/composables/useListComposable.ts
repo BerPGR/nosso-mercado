@@ -1,6 +1,16 @@
 import { db } from '@/firebase'
 import type { Lista } from '@/types/types'
-import { addDoc, collection, where, query, getDocs, updateDoc, doc } from 'firebase/firestore'
+import {
+  addDoc,
+  collection,
+  where,
+  query,
+  getDocs,
+  updateDoc,
+  doc,
+  deleteDoc,
+  orderBy,
+} from 'firebase/firestore'
 
 interface ListaFirebase {
   title: string
@@ -23,7 +33,11 @@ export default function useListComposable() {
   }
 
   async function getOpenListsFromFirebase(): Promise<Lista[]> {
-    const q = await query(collection(db, 'lists'), where('status', '==', false))
+    const q = await query(
+      collection(db, 'lists'),
+      where('status', '==', false),
+      orderBy('createdAt', 'desc'),
+    )
     const listsDocs = await getDocs(q)
     return listsDocs.docs.map((doc) => {
       const data = doc.data()
@@ -40,7 +54,11 @@ export default function useListComposable() {
   }
 
   async function getClosedListsFromFirebase(): Promise<Lista[]> {
-    const q = await query(collection(db, 'lists'), where('status', '==', true))
+    const q = await query(
+      collection(db, 'lists'),
+      where('status', '==', true),
+      orderBy('createdAt', 'desc'),
+    )
     const listsDocs = await getDocs(q)
     return listsDocs.docs.map((doc) => {
       const data = doc.data()
@@ -61,10 +79,16 @@ export default function useListComposable() {
     await updateDoc(listRef, { status: true, total: value })
   }
 
+  async function deleteListById(id: string) {
+    const listRef = doc(db, 'lists', id)
+    await deleteDoc(listRef)
+  }
+
   return {
     saveListToFirebase,
     getOpenListsFromFirebase,
     getClosedListsFromFirebase,
     checkListAsDone,
+    deleteListById,
   }
 }

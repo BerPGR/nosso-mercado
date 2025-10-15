@@ -8,20 +8,24 @@
         Adicionar Lista</UButton>
     </div>
 
-    <div v-if="loading" class="flex items-center justify-between">
+    <div v-if="loading" class="flex items-center justify-between mt-10 md:mt-0">
       <UProgress size="md" />
     </div>
 
-    <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-10" v-if="openListas.length > 0 && loading === false">
+    <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-10 mt-10 md:mt-0"
+      v-if="openListas.length > 0 && loading === false">
       <UCard v-for="lista in openListas" :key="lista.title" class="bg-green-100 shadow-2xl">
         <template #header>
-          <h1 class="text-xl font-semibold">{{ lista.title }}</h1>
+          <div class="flex items-center justify-between">
+            <h1 class="text-xl font-semibold">{{ lista.title }}</h1>
+            <ModalDeleteList :id="lista.id" @delete="deleteList" />
+          </div>
         </template>
 
         <div>
           <h2 class="text-xl md:text-4xl">{{ lista.cart.length }} itens</h2>
           <p>Gasto esperado de <span class="text-2xl text-red-400 font-semibold">{{ formattedValue(lista.expected)
-              }}</span>
+          }}</span>
           </p>
         </div>
 
@@ -42,18 +46,18 @@
     <div class="mt-20" v-if="closedLists.length > 0">
       <h1 class="text-4xl font-bold mb-10">Listas Feitas</h1>
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-10 my-10" v-if="closedLists.length > 0">
-        <UCard v-for="lista in closedLists" :key="lista.title" class="bg-green-100 shadow-2xl">
+        <UCard v-for="lista in closedLists" :key="lista.id" class="bg-green-100 shadow-2xl">
           <template #header>
             <div class="flex items-center justify-between">
               <h1 class="text-xl font-semibold">{{ lista.title }}</h1>
-              <ModalDeleteList />
+              <ModalDeleteList :id="lista.id" @delete="deleteList" />
             </div>
           </template>
 
           <div>
             <h2 class="text-xl md:text-4xl">{{ lista.cart.length }} itens</h2>
             <p>Gasto esperado de <span class="text-2xl text-red-400 font-semibold">{{ formattedValue(lista.expected)
-            }}</span>
+                }}</span>
             </p>
             <p class="mt-2">Gasto total de <span class="text-2xl text-green-600 font-semibold">{{
               formattedValue(lista.total)
@@ -83,24 +87,43 @@ import { ref, onMounted } from 'vue';
 import type { Lista } from '@/types/types';
 import { useListsStore } from '@/stores/lists';
 import { useRouter } from 'vue-router';
+import { useToast } from '@nuxt/ui/runtime/composables/useToast.js';
 import useListComposable from '@/composables/useListComposable'
 
 const router = useRouter()
 const listsStore = useListsStore()
+const toast = useToast()
+
 const loading = ref(true)
 const openListas = ref<Lista[] | []>([])
 const closedLists = ref<Lista[] | []>([])
-const { getOpenListsFromFirebase, getClosedListsFromFirebase } = useListComposable()
+const { getOpenListsFromFirebase, getClosedListsFromFirebase, deleteListById } = useListComposable()
 
 onMounted(async () => {
-  openListas.value = await getOpenListsFromFirebase()
-  closedLists.value = await getClosedListsFromFirebase()
-  loading.value = false
+  await loadLists()
 })
 
 function goToList(lista: Lista) {
   listsStore.setSelected(lista)
   router.push('/check-list')
+}
+
+async function loadLists() {
+  loading.value = true
+  openListas.value = await getOpenListsFromFirebase()
+  closedLists.value = await getClosedListsFromFirebase()
+  loading.value = false
+}
+
+async function deleteList(id: string) {
+  await deleteListById(id)
+  toast.add({
+    title: 'Sucesso',
+    description: 'Lista deletada com sucesso!',
+    color: 'success',
+    icon: 'i-lucide-check-circle',
+  })
+  await loadLists()
 }
 
 const dateFormatter = Intl.DateTimeFormat('pt-BR', {
