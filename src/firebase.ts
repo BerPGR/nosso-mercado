@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
+import { browserLocalPersistence, getAuth, GoogleAuthProvider, setPersistence } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAXTjDegAmSQUp-LolGx2EHr58UWrPPNBM',
@@ -14,4 +15,9 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 
+export const auth = getAuth(app)
 export const db = getFirestore(app)
+
+setPersistence(auth, browserLocalPersistence)
+
+export const googleProvider = new GoogleAuthProvider()

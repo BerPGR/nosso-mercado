@@ -11,6 +11,7 @@ import {
   deleteDoc,
   orderBy,
 } from 'firebase/firestore'
+import { useAuth } from '@/composables/useAuth'
 
 interface ListaFirebase {
   title: string
@@ -19,12 +20,19 @@ interface ListaFirebase {
 }
 
 export default function useListComposable() {
+  const { user } = useAuth()
   const actualDate = new Date()
   const dataToDB = `${actualDate.getFullYear()}-${actualDate.getMonth().toString().padStart(2, '0')}-${actualDate.getDate().toString().padStart(2, '0')}`
 
   async function saveListToFirebase(list: ListaFirebase) {
     const listsRef = collection(db, 'lists')
-    const lista = await addDoc(listsRef, { ...list, total: 0, status: false, createdAt: dataToDB })
+    const lista = await addDoc(listsRef, {
+      ...list,
+      total: 0,
+      status: false,
+      createdAt: dataToDB,
+      uid: user.value?.uid,
+    })
     if (lista) {
       return true
     }
@@ -33,12 +41,17 @@ export default function useListComposable() {
   }
 
   async function getOpenListsFromFirebase(): Promise<Lista[]> {
+    const { user } = useAuth()
     const q = await query(
       collection(db, 'lists'),
       where('status', '==', false),
+      where('uid', '==', user.value?.uid),
       orderBy('createdAt', 'desc'),
     )
+
     const listsDocs = await getDocs(q)
+
+    if (listsDocs.docs.length === 0) return []
     return listsDocs.docs.map((doc) => {
       const data = doc.data()
       return {
@@ -54,12 +67,15 @@ export default function useListComposable() {
   }
 
   async function getClosedListsFromFirebase(): Promise<Lista[]> {
+    const { user } = useAuth()
     const q = await query(
       collection(db, 'lists'),
       where('status', '==', true),
+      where('uid', '==', user.value?.uid),
       orderBy('createdAt', 'desc'),
     )
     const listsDocs = await getDocs(q)
+    if (listsDocs.docs.length === 0) return []
     return listsDocs.docs.map((doc) => {
       const data = doc.data()
       return {

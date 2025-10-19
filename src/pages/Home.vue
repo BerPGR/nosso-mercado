@@ -43,8 +43,8 @@
       <img src="@/assets/carrinho.png" />
     </UPageCard>
 
+    <h1 class="text-4xl font-bold mb-10 mt-20">Listas Feitas</h1>
     <div class="mt-20" v-if="closedLists.length > 0">
-      <h1 class="text-4xl font-bold mb-10">Listas Feitas</h1>
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-10 my-10" v-if="closedLists.length > 0">
         <UCard v-for="lista in closedLists" :key="lista.id" class="bg-green-100 shadow-2xl">
           <template #header>
