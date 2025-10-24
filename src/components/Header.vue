@@ -2,7 +2,8 @@
 <template>
   <UHeader class="py-10">
     <template #left>
-      <h1 class="text-2xl font-bold">Nosso Mercado</h1>
+      <img alt="Logo" src="@/assets/logo.png" class="h-12"/>
+      <h1 class="text-2xl font-bold">Merkadin</h1>
     </template>
 
     <UNavigationMenu class="gap-4" :items="items" />

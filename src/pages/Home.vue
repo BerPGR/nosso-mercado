@@ -25,7 +25,7 @@
         <div>
           <h2 class="text-xl md:text-4xl">{{ lista.cart.length }} itens</h2>
           <p>Gasto esperado de <span class="text-2xl text-red-400 font-semibold">{{ formattedValue(lista.expected)
-          }}</span>
+              }}</span>
           </p>
         </div>
 
@@ -57,7 +57,7 @@
           <div>
             <h2 class="text-xl md:text-4xl">{{ lista.cart.length }} itens</h2>
             <p>Gasto esperado de <span class="text-2xl text-red-400 font-semibold">{{ formattedValue(lista.expected)
-                }}</span>
+            }}</span>
             </p>
             <p class="mt-2">Gasto total de <span class="text-2xl text-green-600 font-semibold">{{
               formattedValue(lista.total)
