@@ -30,14 +30,14 @@ const items = computed<NavigationMenuItem[]>(() => [{
 {
   label: 'Criar Lista',
   to: "/list",
-  icon: 'i-lucide-list',
+  icon: 'i-lucide-file-plus',
   active: route.path.startsWith("/list")
 },
-  /*{
+  {
     label: 'Dashboard',
     to: "/dashboard",
     icon: 'i-lucide-bar-chart-2',
     active: route.path.startsWith("/dashboard")
-  },*/
+  }
 ])
 </script>

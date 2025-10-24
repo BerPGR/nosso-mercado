@@ -44,10 +44,6 @@ router.beforeEach(async (to) => {
   if (to.meta.requiresAuth && !isAuthenticated.value) {
     return { path: '/login', query: { redirect: to.fullPath } }
   }
-
-  if (to.meta.requiresGuest && isAuthenticated.value) {
-    return { path: '/dashboard' }
-  }
 })
 
 export default router
