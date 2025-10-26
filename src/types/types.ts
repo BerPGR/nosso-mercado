@@ -14,3 +14,9 @@ export type Cart = {
   type: string
   status: boolean
 }
+
+export type CartItem = {
+  name: string,
+  quantity: number,
+  type: string
+}

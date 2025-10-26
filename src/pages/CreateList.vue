@@ -45,7 +45,8 @@
               <p>{{ item.type }}</p>
             </div>
             <div class="flex items-center gap-4">
-              <UButton icon="i-lucide-trash" size="md" color="error" variant="soft" @click="removeFromCart(i)" />
+              <ModalEditItem :i="i" :item="item" @insertEditted="insertEdittedItem"/>
+              <UButton class="cursor-pointer" icon="i-lucide-trash" size="md" color="error" variant="soft" @click="removeFromCart(i)" />
               <UBadge color="success" variant="solid" size="md">{{ item.quantity }}</UBadge>
             </div>
           </div>
@@ -57,11 +58,13 @@
 </template>
 
 <script setup lang="ts">
+import ModalEditItem from '@/components/Modals/ModalEditItem.vue'
 import useListComposable from '@/composables/useListComposable'
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import type { CartItem } from '@/types/types'
 import * as z from 'zod'
 
 const { saveListToFirebase } = useListComposable()
@@ -87,7 +90,7 @@ const state = reactive<Partial<Schema>>({
   cart: []
 })
 
-const types = [
+const types: string[] = [
   'Alimento',
   'Bebida',
   'Doce',
@@ -101,10 +104,10 @@ const types = [
   'Outros'
 ]
 
-const cartItem = reactive({
+const cartItem: CartItem = reactive({
   name: "",
   quantity: 0,
-  type: types[0],
+  type: types[0]!,
 })
 
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
@@ -115,6 +118,10 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       router.replace('/')
     }, 2000)
   }
+}
+
+const insertEdittedItem = (index: number, item: CartItem) => {
+  state.cart?.splice(index, 1, item)
 }
 
 const removeFromCart = (index: number) => {
@@ -130,6 +137,6 @@ const addToCard = () => {
 
   cartItem.name = ""
   cartItem.quantity = 0
-  cartItem.type = types[0]
+  cartItem.type = types[0]!
 }
 </script>
