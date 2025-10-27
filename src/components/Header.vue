@@ -11,15 +11,33 @@
     <template #body>
       <UNavigationMenu :items="items" orientation="vertical" class="mx-2.5" />
     </template>
+
+    <template v-if="user !== null" #right>
+      <UButton :loading="loading" label="Sair" color="error" variant="soft" class="cursor-pointer" @click="loginOut"/>
+    </template>
   </UHeader>
 </template>
 
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui';
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useAuth } from '@/composables/useAuth';
 
+const { logout, user } = useAuth()
 const route = useRoute()
+const router = useRouter()
+
+const loading = ref(false)
+
+const loginOut = () => {
+  loading.value = true
+  setTimeout(() => {
+    logout()
+    loading.value = false
+    router.replace('/login')
+  }, 2000)
+}
 
 const items = computed<NavigationMenuItem[]>(() => [{
   label: 'Home',

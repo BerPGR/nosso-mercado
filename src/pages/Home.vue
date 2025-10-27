@@ -89,6 +89,7 @@ import { useListsStore } from '@/stores/lists';
 import { useRouter } from 'vue-router';
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js';
 import useListComposable from '@/composables/useListComposable'
+import { useAuth } from "@/composables/useAuth"
 
 const router = useRouter()
 const listsStore = useListsStore()

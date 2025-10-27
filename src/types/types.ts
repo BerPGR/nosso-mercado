@@ -20,3 +20,9 @@ export type CartItem = {
   quantity: number,
   type: string
 }
+
+export type FirebaseUser = {
+  name: string, 
+  email: string,
+  uid: string
+}

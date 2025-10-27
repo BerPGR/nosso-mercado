@@ -10,12 +10,14 @@ import {
 } from 'firebase/auth'
 import { auth, db, googleProvider } from '@/firebase'
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore'
+import type { FirebaseUser } from '@/types/types'
 
 const _user = ref<User | null>(null)
+const firebaseUser = ref<FirebaseUser | null>(null)
 const _initPromise = new Promise<void>((resolve) => {
   onAuthStateChanged(auth, async (u) => {
     _user.value = u
-    // cria doc do usuário se logou e ainda não existe
+    // cria doc do usuï¿½rio se logou e ainda nï¿½o existe
     if (u) {
       const userRef = doc(db, 'users', u.uid)
       const snap = await getDoc(userRef)
@@ -50,7 +52,12 @@ export function useAuth() {
 
   async function loginWithEmail(email: string, password: string) {
     try {
-      await signInWithEmailAndPassword(auth, email, password)
+      const result = await signInWithEmailAndPassword(auth, email, password)
+      firebaseUser.value = {
+        name: result.user.displayName || '',
+        email: result.user.email || '',
+        uid: result.user.uid,
+      }
     } catch (e) {
       throw new Error('Deu ruim: ' + e)
     }
@@ -86,6 +93,7 @@ export function useAuth() {
   }
 
   return {
+    firebaseUser: firebaseUser,
     user: _user,
     isAuthenticated,
     initReady: _initPromise, // para o router aguardar
