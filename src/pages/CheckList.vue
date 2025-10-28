@@ -46,7 +46,7 @@
 import { computed, ref } from 'vue'
 import type { Cart } from '@/types/types'
 import { useListsStore } from '@/stores/lists'
-import useListComposable from '@/composables/useListComposable'
+import useList from '@/composables/useList'
 import { useRouter } from 'vue-router'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 
@@ -67,7 +67,7 @@ const CATEGORIES = [
 const total = ref<number | null>(null)
 const store = useListsStore()
 const toast = useToast()
-const { checkListAsDone } = useListComposable()
+const { checkListAsDone } = useList()
 const router = useRouter()
 const lista = computed(() => store.selected)
 

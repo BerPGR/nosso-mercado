@@ -9,7 +9,7 @@
     <UNavigationMenu class="gap-4" :items="items" />
 
     <template #body>
-      <UNavigationMenu :items="items" orientation="vertical" class="mx-2.5" />
+      <UNavigationMenu :items="items" orientation="vertical" />
     </template>
 
     <template v-if="user !== null" #right>
@@ -43,19 +43,22 @@ const items = computed<NavigationMenuItem[]>(() => [{
   label: 'Home',
   to: "/",
   icon: 'i-lucide-home',
-  active: route.path == "/"
+  active: route.path == "/",
+  class: 'p-4 md:p-3'
 },
 {
   label: 'Criar Lista',
   to: "/list",
   icon: 'i-lucide-file-plus',
-  active: route.path.startsWith("/list")
+  active: route.path.startsWith("/list"),
+  class: 'my-4 p-4 md:p-3'
 },
-  {
+  /*{
     label: 'Dashboard',
     to: "/dashboard",
     icon: 'i-lucide-bar-chart-2',
-    active: route.path.startsWith("/dashboard")
-  }
+    active: route.path.startsWith("/dashboard"),
+    class: 'p-4 md:p-2'
+  }*/
 ])
 </script>

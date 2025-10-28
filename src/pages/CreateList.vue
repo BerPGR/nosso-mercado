@@ -59,15 +59,15 @@
 
 <script setup lang="ts">
 import ModalEditItem from '@/components/Modals/ModalEditItem.vue'
-import useListComposable from '@/composables/useListComposable'
+import useList from '@/composables/useList'
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { reactive } from 'vue'
-import { useRouter } from 'vue-router'
 import type { CartItem } from '@/types/types'
 import * as z from 'zod'
+import { useRouter } from 'vue-router'
 
-const { saveListToFirebase } = useListComposable()
+const { saveListToFirebase } = useList()
 
 const toast = useToast()
 const router = useRouter()

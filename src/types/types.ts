@@ -24,5 +24,6 @@ export type CartItem = {
 export type FirebaseUser = {
   name: string, 
   email: string,
-  uid: string
+  uid: string,
+  type: boolean
 }

@@ -19,7 +19,7 @@ interface ListaFirebase {
   cart: Array<object>
 }
 
-export default function useListComposable() {
+export default function useList() {
   const { user } = useAuth()
   const actualDate = new Date()
   const dataToDB = `${actualDate.getFullYear()}-${actualDate.getMonth().toString().padStart(2, '0')}-${actualDate.getDate().toString().padStart(2, '0')}`

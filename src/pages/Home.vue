@@ -88,7 +88,7 @@ import type { Lista } from '@/types/types';
 import { useListsStore } from '@/stores/lists';
 import { useRouter } from 'vue-router';
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js';
-import useListComposable from '@/composables/useListComposable'
+import useListComposable from '@/composables/useList'
 import { useAuth } from "@/composables/useAuth"
 
 const router = useRouter()
