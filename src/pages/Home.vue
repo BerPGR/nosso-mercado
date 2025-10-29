@@ -1,6 +1,34 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <UContainer>
+    <div class="flex flex-col items-start gap-3">
+      <h1 class="text-4xl font-bold my-10">Seus Grupos</h1>
+      <UEmpty class="self-center shadow-2xl" icon="i-lucide-file" title="Sem grupos"
+        description="Parece que você ainda não entrou em um grupo!" :actions="firebaseUser?.type === true ? [
+          {
+            icon: 'i-lucide-plus',
+            label: 'Criar um grupo',
+            onClick: () => createGroupOpenModal(),
+            class: 'cursor-pointer'
+          },
+          {
+            icon: 'i-lucide-square-arrow-out-up-right',
+            label: 'Entrar em grupo',
+            class: 'cursor-pointer',
+            color: 'neutral',
+            variant: 'subtle'
+          }
+        ] : [
+          {
+            icon: 'i-lucide-square-arrow-out-up-right',
+            label: 'Entrar em grupo',
+            class: 'cursor-pointer',
+            onClick: () => createGroupOpenModal()
+          }
+        ]"
+        />
+    </div>
+
     <div class="md:flex items-center justify-between sm:flex-col md:flex-row">
       <h1 class="text-4xl font-bold my-10">Listas Pendentes</h1>
       <UButton to="/list" icon="i-lucide-plus"
@@ -79,6 +107,8 @@
       v-if="loading === false && closedLists.length === 0" class="md:w-1/3 mx-auto mt-10">
       <img src="@/assets/carrinho.png" />
     </UPageCard>
+
+    <ModalCreateGroup :close="closeGroupModal" :isCreateGroupOpen="isCreateGroupOpen"/>
   </UContainer>
 </template>
 
@@ -91,10 +121,12 @@ import { useToast } from '@nuxt/ui/runtime/composables/useToast.js';
 import useListComposable from '@/composables/useList'
 import { useAuth } from "@/composables/useAuth"
 
+const { firebaseUser } = useAuth()
 const router = useRouter()
 const listsStore = useListsStore()
 const toast = useToast()
 
+const isCreateGroupOpen = ref<boolean>(false)
 const loading = ref(true)
 const openListas = ref<Lista[] | []>([])
 const closedLists = ref<Lista[] | []>([])
@@ -144,5 +176,13 @@ const formatter = Intl.NumberFormat('pt-BR', {
 
 function formattedValue(value: number) {
   return formatter.format(value)
+}
+
+function createGroupOpenModal() {
+  isCreateGroupOpen.value = true
+}
+
+function closeGroupModal() {
+  isCreateGroupOpen.value = false
 }
 </script>

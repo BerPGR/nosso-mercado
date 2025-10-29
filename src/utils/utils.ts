@@ -1,5 +1,4 @@
-export default function utils() {
-    function generateRandomString() {
+export default function generateRandomString() {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let result = '';
         const charactersLength = characters.length;
@@ -8,7 +7,4 @@ export default function utils() {
         }
 
         return result;
-    }
-
-    return { generateRandomString }
 }
