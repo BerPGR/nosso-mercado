@@ -11,6 +11,7 @@ import {
 import { auth, db, googleProvider } from '@/firebase'
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore'
 import type { FirebaseUser } from '@/types/types'
+import { useUserStore } from '@/stores/user'
 
 const _user = ref<User | null>(null)
 const firebaseUser = ref<FirebaseUser | null>(null)
@@ -51,6 +52,8 @@ export function useAuth() {
   }
 
   async function loginWithEmail(email: string, password: string) {
+    const store = useUserStore()
+
     try {
       const result = await signInWithEmailAndPassword(auth, email, password)
       const getUser = await getDoc(doc(db, 'users', result.user.uid))
@@ -58,8 +61,10 @@ export function useAuth() {
         name: result.user.displayName || '',
         email: result.user.email || '',
         uid: result.user.uid,
-        type: getUser.data()!.type || false
+        type: getUser.data()!.type || false,
       }
+
+      store.setSelected(firebaseUser.value)
     } catch (e) {
       throw new Error('Deu ruim: ' + e)
     }
@@ -82,13 +87,20 @@ export function useAuth() {
           photoURL: cred.user.photoURL ?? '',
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
-          type: false
+          type: false,
         },
         { merge: true },
       )
     } catch (e) {
       throw new Error('Deu ruim: ' + e)
     }
+  }
+
+  function loadUser() {
+    const store = useUserStore()
+
+    store.getHistoryUser()
+    firebaseUser.value = store.user
   }
 
   async function logout() {
@@ -104,5 +116,6 @@ export function useAuth() {
     loginWithEmail,
     registerWithEmail,
     logout,
+    loadUser
   }
 }

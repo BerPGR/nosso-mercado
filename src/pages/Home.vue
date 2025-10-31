@@ -3,7 +3,21 @@
   <UContainer>
     <div class="flex flex-col items-start gap-3">
       <h1 class="text-4xl font-bold my-10">Seus Grupos</h1>
-      <UEmpty class="self-center shadow-2xl" icon="i-lucide-file" title="Sem grupos"
+      <UCarousel class="w-full" v-if="userGroups && userGroups.length > 0" :items="userGroups" v-slot="{ item }">
+        <UCard class="w-1/3 shadow-2xl">
+          <template #header>
+            <div class="w-full flex flex-col md:flex-row items-start md:items-center justify-between">
+              <h1 class="text-2xl font-bold">{{ item.name }}</h1>
+              <span>Criado em {{ createdAtFormatted(item.createdAt) }}</span>
+            </div>
+          </template>
+
+          <template #footer>
+            <UButton label="Acessar grupo" size="xl" variant="soft" class="cursor-pointer"/>
+          </template>
+        </UCard>
+      </UCarousel>
+      <UEmpty v-else class="self-center shadow-2xl" icon="i-lucide-file" title="Sem grupos"
         description="Parece que você ainda não entrou em um grupo!" :actions="firebaseUser?.type === true ? [
           {
             icon: 'i-lucide-plus',
@@ -42,7 +56,7 @@
 
     <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-10 mt-10 md:mt-0"
       v-if="openListas.length > 0 && loading === false">
-      <UCard v-for="lista in openListas" :key="lista.title" class="bg-green-100 shadow-2xl">
+      <UCard v-for="lista in openListas" :key="lista.title" class="bg-green-50 shadow-2xl">
         <template #header>
           <div class="flex items-center justify-between">
             <h1 class="text-xl font-semibold">{{ lista.title }}</h1>
@@ -74,7 +88,7 @@
     <h1 class="text-4xl font-bold mb-10 mt-20">Listas Feitas</h1>
     <div class="mt-20" v-if="closedLists.length > 0">
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-10 my-10" v-if="closedLists.length > 0">
-        <UCard v-for="lista in closedLists" :key="lista.id" class="bg-green-100 shadow-2xl">
+        <UCard v-for="lista in closedLists" :key="lista.id" class="bg-green-50 shadow-2xl">
           <template #header>
             <div class="flex items-center justify-between">
               <h1 class="text-xl font-semibold">{{ lista.title }}</h1>
@@ -114,26 +128,32 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import type { Lista } from '@/types/types';
-import { useListsStore } from '@/stores/lists';
 import { useRouter } from 'vue-router';
-import { useToast } from '@nuxt/ui/runtime/composables/useToast.js';
-import useListComposable from '@/composables/useList'
+import type { Group, Lista } from '@/types/types';
+import useList from '@/composables/useList'
+import { useListsStore } from '@/stores/lists';
+import { useUserStore } from '@/stores/user';
+import useGroup  from "@/composables/useGroup"
 import { useAuth } from "@/composables/useAuth"
+import { useToast } from '@nuxt/ui/runtime/composables/useToast.js';
 
-const { firebaseUser } = useAuth()
+const toast = useToast()
 const router = useRouter()
 const listsStore = useListsStore()
-const toast = useToast()
+const userStore = useUserStore()
+const { firebaseUser } = useAuth()
+const { getGroupsFromCurrentUser } = useGroup()
+const { getOpenListsFromFirebase, getClosedListsFromFirebase, deleteListById } = useList()
 
 const isCreateGroupOpen = ref<boolean>(false)
 const loading = ref(true)
-const openListas = ref<Lista[] | []>([])
-const closedLists = ref<Lista[] | []>([])
-const { getOpenListsFromFirebase, getClosedListsFromFirebase, deleteListById } = useListComposable()
+const openListas = ref<Lista[]>([])
+const closedLists = ref<Lista[]>([])
+const userGroups = ref<Group[] | null>(null)
 
 onMounted(async () => {
   await loadLists()
+  userGroups.value = await getGroupsFromCurrentUser()
 })
 
 function goToList(lista: Lista) {

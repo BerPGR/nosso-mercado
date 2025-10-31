@@ -17,10 +17,19 @@ export default function useGroup() {
     const { user } = useAuth()
     const q = query(collection(db, 'groups'), where('memberIds', 'array-contains', user.value?.uid))
     const snap = await getDocs(q)
-    return snap.docs.map((d) => ({
-      id: d.id,
-      ...d.data(),
-    }))
+    return snap.docs.map((d) => {
+      const data = d.data()
+      console.log(data);
+      
+      return {
+        id: d.id,
+        createdAt: data.createdAt,
+        memberIds: [...data.memberIds],
+        name: data.name,
+        ownerId: data.ownerId,
+        code: data.code
+      }
+    })
   }
 
   async function createInviteCode(code: string) {
@@ -33,10 +42,16 @@ export default function useGroup() {
 
   async function getGroupLists(groupId: string) {
     const snap = await getDocs(collection(db, 'groups', groupId, 'lists'))
-    return snap.docs.map((d) => ({
-      id: d.id,
-      ...d.data(),
-    }))
+    return snap.docs.map((d) => {
+      const data = d.data()
+      return {
+        id: d.id,
+        createdAt: data.createdAt,
+        memberIds: [...data.memberIds()],
+        name: data.name,
+        ownerId: data.ownerId
+      }
+    })
   }
 
   async function createGroup(name: string, code: string) {
@@ -73,12 +88,14 @@ export default function useGroup() {
     const dataToDB = `${actualDate.getFullYear()}-${actualDate.getMonth().toString().padStart(2, '0')}-${actualDate.getDate().toString().padStart(2, '0')}`
     const gSnap = await getDoc(doc(db, 'groups', groupId))
     const { memberIds } = gSnap.data() as { memberIds: string[] }
-    const ref = addDoc(collection(db, 'groups', groupId, 'lists'), {
+    const ref = await addDoc(collection(db, 'groups', groupId, 'lists'), {
       ...payload,
       groupId,
       memberIds,
       createdAt: dataToDB,
     })
+
+    return ref.id
   }
 
   return { getGroupsFromCurrentUser, getGroupLists, createGroup, createInviteCode}

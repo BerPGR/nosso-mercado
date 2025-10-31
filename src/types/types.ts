@@ -21,6 +21,14 @@ export type CartItem = {
   type: string
 }
 
+export type Group = {
+  name: string,
+  code: string,
+  createdAt: Date,
+  ownerId: string,
+  memberIds: string[]
+}
+
 export type FirebaseUser = {
   name: string, 
   email: string,

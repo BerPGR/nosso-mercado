@@ -1,4 +1,6 @@
-export default function generateRandomString() {
+import { useUserStore } from "@/stores/user";
+
+export function generateRandomString() {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let result = '';
         const charactersLength = characters.length;
@@ -7,4 +9,9 @@ export default function generateRandomString() {
         }
 
         return result;
+}
+
+export function loadUserFromStorage() {
+    const userStore = useUserStore()
+    userStore.getHistoryUser()
 }

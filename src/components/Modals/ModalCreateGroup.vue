@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { useToast } from '@nuxt/ui/runtime/composables/useToast.js';
-import generateRandomString from '@/utils/utils';
+import { generateRandomString } from '@/utils/utils';
 import { ref } from 'vue';
 import useGroup from '@/composables/useGroup';
 
