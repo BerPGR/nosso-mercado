@@ -22,6 +22,7 @@ export type CartItem = {
 }
 
 export type Group = {
+  id: string
   name: string,
   code: string,
   createdAt: Date,

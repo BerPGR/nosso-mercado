@@ -2,6 +2,7 @@ import { useAuth } from '@/composables/useAuth'
 import CheckList from '@/pages/CheckList.vue'
 import CreateList from '@/pages/CreateList.vue'
 import Dashboard from '@/pages/Dashboard.vue'
+import Group from '@/pages/Group.vue'
 import Home from '@/pages/Home.vue'
 import Login from '@/pages/Login.vue'
 import { createRouter, createWebHistory } from 'vue-router'
@@ -34,6 +35,11 @@ const router = createRouter({
       path: '/login',
       component: Login,
     },
+    {
+      path: '/group/:id',
+      component: Group,
+      meta: { requiresAuth: true }
+    }
   ],
 })
 

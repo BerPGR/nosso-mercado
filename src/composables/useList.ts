@@ -42,7 +42,7 @@ export default function useList() {
 
   async function getOpenListsFromFirebase(): Promise<Lista[]> {
     const { user } = useAuth()
-    const q = await query(
+    const q = query(
       collection(db, 'lists'),
       where('status', '==', false),
       where('uid', '==', user.value?.uid),
@@ -56,6 +56,56 @@ export default function useList() {
       const data = doc.data()
       return {
         id: doc.id,
+        title: data.title,
+        cart: data.cart,
+        expected: data.expected ?? 0,
+        status: data.status ?? false,
+        total: data.total,
+        createdAt: data.createdAt ?? '',
+      }
+    })
+  }
+
+  async function getGroupOpenListsFromFirebase(groupId: string): Promise<Lista[]> {
+    const q = query(
+      collection(db, 'groups', groupId, 'lists'),
+      where('status', '==', false),
+      orderBy('createdAt', 'desc'),
+    )
+
+    const groupListDocs = await getDocs(q)
+
+    if (groupListDocs.docs.length === 0) return []
+
+    return groupListDocs.docs.map((d) => {
+      const data = d.data()
+      return {
+        id: d.id,
+        title: data.title,
+        cart: data.cart,
+        expected: data.expected ?? 0,
+        status: data.status ?? false,
+        total: data.total,
+        createdAt: data.createdAt ?? '',
+      }
+    })
+  }
+
+  async function getGroupClosedListsFromFirebase(groupId: string): Promise<Lista[]> {
+    const q = query(
+      collection(db, 'groups', groupId, 'lists'),
+      where('status', '==', true),
+      orderBy('createdAt', 'desc'),
+    )
+
+    const groupListDocs = await getDocs(q)
+
+    if (groupListDocs.docs.length === 0) return []
+
+    return groupListDocs.docs.map((d) => {
+      const data = d.data()
+      return {
+        id: d.id,
         title: data.title,
         cart: data.cart,
         expected: data.expected ?? 0,
@@ -106,5 +156,7 @@ export default function useList() {
     getClosedListsFromFirebase,
     checkListAsDone,
     deleteListById,
+    getGroupOpenListsFromFirebase,
+    getGroupClosedListsFromFirebase,
   }
 }

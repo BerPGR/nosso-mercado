@@ -9,6 +9,8 @@ import {
   addDoc,
   serverTimestamp,
   setDoc,
+  updateDoc,
+  arrayUnion,
 } from 'firebase/firestore'
 import { useAuth } from './useAuth'
 
@@ -81,6 +83,22 @@ export default function useGroup() {
     const groupId = group?.id
     const groupRef = doc(db, 'groups', groupId!)
     const memberRef = doc(db, 'groups', groupId!, 'members', user.value!.uid)
+
+    const getGroup = await getDoc(groupRef)
+    const groupData = getGroup.data()
+
+    if (groupData!.memberIds.includes(user.value?.uid)) {
+      throw ('Erro')
+      return
+    }
+
+    await updateDoc(groupRef, {
+      memberIds: arrayUnion(user.value?.uid)
+    })
+
+    await setDoc(memberRef, {
+      role: 'member'
+    })
   }
 
   async function createListInGroup(groupId: string, payload: any) {
@@ -98,5 +116,5 @@ export default function useGroup() {
     return ref.id
   }
 
-  return { getGroupsFromCurrentUser, getGroupLists, createGroup, createInviteCode}
+  return { getGroupsFromCurrentUser, getGroupLists, createGroup, createInviteCode, joinGroup}
 }
