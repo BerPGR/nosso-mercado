@@ -111,10 +111,11 @@ export default function useGroup() {
       groupId,
       memberIds,
       createdAt: dataToDB,
+      status: false,
     })
 
     return ref.id
   }
 
-  return { getGroupsFromCurrentUser, getGroupLists, createGroup, createInviteCode, joinGroup}
+  return { getGroupsFromCurrentUser, getGroupLists, createGroup, createInviteCode, joinGroup, createListInGroup }
 }

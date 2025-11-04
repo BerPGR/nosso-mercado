@@ -1,5 +1,6 @@
 import { useAuth } from '@/composables/useAuth'
 import CheckList from '@/pages/CheckList.vue'
+import CreateGroupList from '@/pages/CreateGroupList.vue'
 import CreateList from '@/pages/CreateList.vue'
 import Dashboard from '@/pages/Dashboard.vue'
 import Group from '@/pages/Group.vue'
@@ -38,6 +39,11 @@ const router = createRouter({
     {
       path: '/group/:id',
       component: Group,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/group/create/:id',
+      component: CreateGroupList,
       meta: { requiresAuth: true }
     }
   ],

@@ -4,7 +4,7 @@
     <div class="flex flex-col items-start gap-3">
       <h1 class="text-4xl font-bold my-10">Seus Grupos</h1>
       <UCarousel class="w-full" v-if="userGroups && userGroups.length > 0" :items="userGroups" v-slot="{ item }">
-        <UCard class="w-1/3 shadow-2xl">
+        <UCard class="md:w-1/3 shadow-2xl">
           <template #header>
             <div class="w-full flex flex-col md:flex-row items-start md:items-center justify-between">
               <h1 class="text-2xl font-bold">{{ item.name }}</h1>
