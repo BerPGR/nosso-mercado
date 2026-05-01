@@ -22,12 +22,12 @@
         <ul class="space-y-3">
           <li v-for="item in grouped[cat]" :key="`${item.name}-${item.type}`"
             class="flex items-center justify-between rounded-lg p-3 bg-gray-50">
-            <div class="flex items-center gap-3">
-              <!--<UCheckbox v-model="item.status" />-->
+            <div class="flex w-full items-center justify-between gap-3">
               <div>
                 <p class="font-medium leading-tight">{{ item.name }}</p>
                 <p class="text-sm text-gray-500">Quantidade: {{ item.quantity }}</p>
               </div>
+              <UCheckbox v-model="item.status" color="secondary" class="mr-5" />
             </div>
             <UBadge v-if="item.status" color="success" variant="subtle">ok</UBadge>
           </li>
